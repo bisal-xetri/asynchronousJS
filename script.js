@@ -29,7 +29,7 @@ request.addEventListener('load', function () {
   countriesContainer.style.opacity = 1;
 });
 }
-getCountryData('portugal')
+
 getCountryData('nepal')
 getCountryData('nepal')
 
