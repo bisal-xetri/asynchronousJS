@@ -17,7 +17,7 @@ request.addEventListener('load', function () {
     <article class="country">
       <img class="country__img" src="${data.flags.png}" alt="Flag of ${data.name.common}" />
       <div class="country__data">
-        <h3 class="country__name">${data.name.nativeName.nep.common}</h3>
+        <h3 class="country__name">${data.name.common}</h3>
         <h4 class="country__region">${data.region}</h4>
         <p class="country__row"><span>👫</span>${(+data.population / 1000000).toFixed(1)} million people</p>
         <p class="country__row"><span>🗣️</span>${data.languages.nep}</p>
@@ -29,5 +29,7 @@ request.addEventListener('load', function () {
   countriesContainer.style.opacity = 1;
 });
 }
+getCountryData('portugal')
 getCountryData('nepal')
 getCountryData('nepal')
+
