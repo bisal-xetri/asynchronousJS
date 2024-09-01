@@ -108,7 +108,7 @@ setTimeout(() => {
 // request.send();
 
 const request = fetch('https://restcountries.com/v3.1/name/nepal');
-console.log(request);
+
 
 //promises are placeholder for future value/ response coming from AJAX call
 
@@ -120,12 +120,29 @@ console.log(request);
 //   }).then(function(data){
 //     console.log(data)
 //     renderCountry(data[0])
-//   })
+//     const neighbor=data[0].borders[0];
+//        if(!neighbor)return;
+//       return fetch(`https://restcountries.com/v3.1/alpha/${neighbor}`);
+//   }).then(response=>response.json())
+//   .then(data=>renderCountry(data,'neighbor'))
+  
+// }
 
 // }
 const getCountryData = function (country) {
   fetch(`https://restcountries.com/v3.1/name/${country}`)
     .then(response => response.json())
-    .then(data => renderCountry(data[0]));
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbor = data[0].borders && data[0].borders[0];
+      if (!neighbor) return;
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbor}`);
+    })
+    .then(response => response?.json())
+    .then(data => {
+      if (data) renderCountry(data[0], 'neighbour');
+    });
 };
+
 getCountryData('nepal');
+
