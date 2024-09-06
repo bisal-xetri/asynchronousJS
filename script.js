@@ -54,10 +54,16 @@ const renderCountry = function (data, className = '') {
       }</p>
     </div>
   </article>`;
-
+ 
   countriesContainer.insertAdjacentHTML('beforeend', html);
-  countriesContainer.style.opacity = 1;
+  // countriesContainer.style.opacity = 1;
 };
+
+const renderError=function(msg){
+
+  countriesContainer.insertAdjacentText('beforeend',msg);
+  // countriesContainer.style.opacity=1;
+}
 /*
 const getCountryAndNeighbor=function(country){
 const request = new XMLHttpRequest();
@@ -129,20 +135,71 @@ const request = fetch('https://restcountries.com/v3.1/name/nepal');
 // }
 
 // }
+/*const getCountryData=function(country){
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+  .then(response=>response.json())
+  .then(data=>{
+    renderCountry(data[0]);
+    const neighbor=data[0].borders[0];
+    if(!neighbor) return;
+    return fetch(`https://restcountries.com/v3.1/alpha/${neighbor}`);
+  })
+  .then(response=>response.json())
+  .then(data=>renderCountry(data,'neighbour'))
+}
+getCountryData('nepal'); */
 const getCountryData = function (country) {
   fetch(`https://restcountries.com/v3.1/name/${country}`)
     .then(response => response.json())
     .then(data => {
+      // Check if data[0] and flags exist to prevent undefined error
+      if (!data[0] || !data[0].flags) throw new Error('Country data is incomplete');
+      
       renderCountry(data[0]);
-      const neighbor = data[0].borders && data[0].borders[0];
+
+      // Check if borders exist before accessing the first border
+      const neighbor = data[0].borders ? data[0].borders[0] : null;
       if (!neighbor) return;
+
       return fetch(`https://restcountries.com/v3.1/alpha/${neighbor}`);
     })
-    .then(response => response?.json())
+    .then(response => response ? response.json() : null)
     .then(data => {
       if (data) renderCountry(data[0], 'neighbour');
-    });
+    })
+    .catch(err => {
+      console.error(`${err} 💥💥💥`);
+      renderError(`Something went wrong 💥💥 ${err.message}. Try Again!`);
+    })
+    .finally(()=>{
+      countriesContainer.style.opacity = 1;
+    })
 };
 
-getCountryData('nepal');
+btn.addEventListener("click", function() {
+  getCountryData('nepal');
+});
+
+// getCountryData('xyxy');
+
+// const getCountryData = function (country) {
+//   fetch(`https://restcountries.com/v3.1/name/${country}`)
+//     .then(response => response.json())
+//     .then(data => {
+//       renderCountry(data[0]);
+//       const neighbor =  data[0].borders[0];
+//       if (!neighbor) return;
+//       return fetch(`https://restcountries.com/v3.1/alpha/${neighbor}`);
+//     })
+//     .then(response=>response.json())
+//     .then(data=>renderCountry(data,'neighbour'))
+//     .catch(err=>{console.error(`${err} 💥💥💥`);
+//       renderError(`Something went wrong 💥💥 ${err.message}.Try Again`);
+    
+//     })
+//     .
+// };
+
+
+
 
